@@ -59,9 +59,9 @@
   const procesarFormulario = async()=>{
     cargando.value = true;
     if(current_item.value){
+      console.log("editando")
         await actualizar({...campos, id: current_item.value.id})
     }else{
-        console.log("agregando")
         await agregar(campos)
     }
     cargando.value = false;

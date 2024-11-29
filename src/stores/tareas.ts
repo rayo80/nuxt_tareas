@@ -36,22 +36,29 @@ export const useTareasStore = defineStore('tareas', {
             body
         })
         if (data){
-            this.items = [...this.items, data.value as ITarea];
+            this.items = [data.value as ITarea, ...this.items];
 
         }
         console.log("todo estuvo bien")
         navigateTo('/')      
     },
     async actualizar(body:ITarea){
-      const {data, error} = await useFetch('/api/actualizar-pelicula',{
-        method: 'PATCH',
+      const {data, error} = await useFetch(this.api_base+`/${body.id}`,{
+        method: 'PUT',
         body
       })
+
+      if (data){
+
+        this.items = this.items.filter(x => x.id !== body.id) 
+        this.items = [data.value as ITarea, ...this.items, ];
+
+      }
       navigateTo('/')      
     },
-    
-    async update(body:ITarea){
-        const {data, error} = await useFetch('/api/actualizar-pelicula',{
+
+    async update(id:number, body:ITarea){
+        const {data, error} = await useFetch(this.api_base+`/${id}`,{
           method: 'PATCH',
           body
         })
