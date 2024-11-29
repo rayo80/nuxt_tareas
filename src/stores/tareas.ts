@@ -3,23 +3,22 @@ import { defineStore } from "pinia";
 
 interface IState{
   items: ITarea[],
-  current_item: ITarea | null
+  current_item: ITarea | null,
+  api_base: string
 }
 
-const api_base = `${process.env.BASE_URL}`
-const api_ref = '/api/tareas'
-const api_name = api_base + '/api/tareas'
 
-export const useTareasStore = defineStore(api_name, {
+export const useTareasStore = defineStore('tareas', {
   state: ():IState=>({
     items: [],
-    current_item: null
+    current_item: null,
+    api_base: `${process.env.BASE_URL}`+'/api/tareas'
   }),
   actions: {
     async getApiTareas(){
         console.log("entro a llamar a la Api")
-        console.log("A la Api", `${api_base}`)
-        const {data, error} = await useFetch(api_ref, {method: 'GET'})
+        console.log("A la Api", `${this.api_base}`)
+        const {data, error} = await useFetch(this.api_base, {method: 'GET'})
         this.items = (data.value as any) || []
     },
     async obtenerPeliculas(){
@@ -32,21 +31,15 @@ export const useTareasStore = defineStore(api_name, {
     },
     async agregar(body:{titulo: string, descripcion: string, estado: number}){
         console.log("entro a agregar")
-        const {data, error} = await useFetch(api_ref,{
+        const {data, error} = await useFetch(this.api_base,{
             method: 'POST',
             body
         })
         if (data){
-            console.log("entro a crear", data.value)
-
-            console.log("porque no entre")
-            console.log("value", data.value)
-            console.log("items actuales", data.value)
-
             this.items = [...this.items, data.value as ITarea];
-            console.log("items", this.items)
-        }
 
+        }
+        console.log("todo estuvo bien")
         navigateTo('/')      
     },
     async actualizar(body:ITarea){
@@ -56,6 +49,7 @@ export const useTareasStore = defineStore(api_name, {
       })
       navigateTo('/')      
     },
+    
     async update(body:ITarea){
         const {data, error} = await useFetch('/api/actualizar-pelicula',{
           method: 'PATCH',
@@ -63,12 +57,14 @@ export const useTareasStore = defineStore(api_name, {
         })
         navigateTo('/')      
       },
+
     async eliminar(id:number){
-      const {data, error} = await useFetch(api_name+`/${id}`,{
+      const {data, error} = await useFetch(this.api_base+`/${id}`,{
         method: 'DELETE'
       })
       this.items = this.items.filter(x => x.id !== id) 
     },
+
     setPeliculaActual(item:ITarea | null){
       this.current_item = item
     }

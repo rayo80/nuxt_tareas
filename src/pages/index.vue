@@ -13,7 +13,7 @@
           <VTable>
             <thead>
               <tr>
-                <th>Nombre</th>
+                <th>Titulo</th>
                 <th>Descripcion</th>
                 <th>Estado</th>
                 <th>Fecha de Creacion</th>
