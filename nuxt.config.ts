@@ -17,4 +17,11 @@ export default defineNuxtConfig({
     dirs:['stores']
   },
   modules: ['@pinia/nuxt'],
+  runtimeConfig: {
+    // Make environment variables accessible here
+    public: {
+      API_BASE_URL: process.env.BASE_URL || 'http://localhost:3000',
+      // Add more environment variables as needed
+    },
+  },
 })
